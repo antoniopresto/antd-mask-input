@@ -1,1 +1,2 @@
-export * from './lib/MaskedInput';
+import { MaskedInput } from './lib/MaskedInput';
+export default MaskedInput;

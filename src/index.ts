@@ -1,2 +1,4 @@
-import { MaskedInput } from './lib/MaskedInput';
-export default MaskedInput;
+import Input from './lib/MaskedInput';
+
+export const MaskedInput = Input;
+export default Input;

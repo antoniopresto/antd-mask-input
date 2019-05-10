@@ -15,7 +15,7 @@ type TChangeEvent = ChangeEvent<HTMLInputElement>;
 type TKeyboardEvent = any;
 type TClipboardEvent = ClipboardEvent<any>;
 
-class FormInputComponent extends Component<Props> {
+export default class FormInputComponent extends Component<Props> {
   mask: InputMask;
   input!: HTMLInputElement;
 
@@ -241,5 +241,3 @@ class FormInputComponent extends Component<Props> {
     );
   }
 }
-
-export const MaskedInput = FormInputComponent;

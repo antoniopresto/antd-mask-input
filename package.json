@@ -1,6 +1,6 @@
 {
-  "name": "antd-masked-input",
-  "version": "0.0.1",
+  "name": "antd-mask-input",
+  "version": "0.0.2",
   "description": "Ant Design Mask Input",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
@@ -48,10 +48,6 @@
   },
   "peerDependencies": {
     "antd": ">=3.0.0"
-  },
-  "dependencies": {
-    "antd": "^3.17.0",
-    "react": "^16.8.6"
   },
   "devDependencies": {
     "ava": "1.0.0-beta.7",

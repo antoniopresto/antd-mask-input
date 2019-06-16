@@ -25,7 +25,7 @@ export default class FormInputComponent extends Component<Props> {
     let options: any = {
       pattern: this.props.mask,
       value: this.props.value,
-      formatCharacters: this.props.formatCharacters,
+      formatCharacters: this.props.formatCharacters
     };
 
     if (this.props.placeholderChar) {
@@ -36,13 +36,15 @@ export default class FormInputComponent extends Component<Props> {
   }
 
   static defaultProps = {
-    value: '',
-    rules: [],
+    rules: []
   };
 
   componentWillReceiveProps(nextProps: Props) {
     if (!this.props.mask) return null;
-    if (this.props.mask !== nextProps.mask && this.props.value !== nextProps.mask) {
+    if (
+      this.props.mask !== nextProps.mask &&
+      this.props.value !== nextProps.mask
+    ) {
       // if we get a new value and a new mask at the same time
       // check if the mask.value is still the initial value
       // - if so use the nextProps value
@@ -50,7 +52,9 @@ export default class FormInputComponent extends Component<Props> {
       if (this.mask.getValue() === this.mask.emptyValue) {
         this.mask.setPattern(nextProps.mask, { value: nextProps.value });
       } else {
-        this.mask.setPattern(nextProps.mask, { value: this.mask.getRawValue() });
+        this.mask.setPattern(nextProps.mask, {
+          value: this.mask.getRawValue()
+        });
       }
     } else if (this.props.mask !== nextProps.mask) {
       this.mask.setPattern(nextProps.mask, { value: this.mask.getRawValue() });
@@ -79,7 +83,7 @@ export default class FormInputComponent extends Component<Props> {
   _updatePattern(props: Props) {
     this.mask.setPattern(props.mask, {
       value: this.mask.getRawValue(),
-      selection: getSelection(this.input),
+      selection: getSelection(this.input)
     });
   }
 
@@ -100,7 +104,7 @@ export default class FormInputComponent extends Component<Props> {
       // only modify mask if form contents actually changed
       this._updateMaskSelection();
       this.mask.setValue(incomingValue); // write the whole updated value into the mask
-      e.target.value = this._getDisplayValue(); // update the form with pattern applied to the value
+      this.setValue(this._getDisplayValue()); // update the form with pattern applied to the value
       this._updateInputSelection();
     }
 
@@ -117,7 +121,7 @@ export default class FormInputComponent extends Component<Props> {
     if (isUndo(e)) {
       e.preventDefault();
       if (this.mask.undo()) {
-        e.target.value = this._getDisplayValue();
+        this.setValue(this._getDisplayValue());
         this._updateInputSelection();
         if (this.props.onChange) {
           this.props.onChange(e);
@@ -127,7 +131,7 @@ export default class FormInputComponent extends Component<Props> {
     } else if (isRedo(e)) {
       e.preventDefault();
       if (this.mask.redo()) {
-        e.target.value = this._getDisplayValue();
+        this.setValue(this._getDisplayValue());
         this._updateInputSelection();
         if (this.props.onChange) {
           this.props.onChange(e);
@@ -141,7 +145,7 @@ export default class FormInputComponent extends Component<Props> {
       this._updateMaskSelection();
       if (this.mask.backspace()) {
         let value = this._getDisplayValue();
-        e.target.value = value;
+        this.setValue(value);
         if (value) {
           this._updateInputSelection();
         }
@@ -164,7 +168,7 @@ export default class FormInputComponent extends Component<Props> {
     e.preventDefault();
     this._updateMaskSelection();
     if (this.mask.input(e.key || e.data)) {
-      e.target.value = this.mask.getValue();
+      this.setValue(this.mask.getValue());
       this._updateInputSelection();
       if (this.props.onChange) {
         this.props.onChange(e);
@@ -178,7 +182,7 @@ export default class FormInputComponent extends Component<Props> {
     // getData value needed for IE also works in FF & Chrome
     if (this.mask.paste(e.clipboardData.getData('Text'))) {
       // @ts-ignore
-      e.target.value = this.mask.getValue();
+      this.setValue(this.mask.getValue());
       // Timeout needed for IE
       setTimeout(() => this._updateInputSelection(), 0);
       if (this.props.onChange) {
@@ -195,7 +199,9 @@ export default class FormInputComponent extends Component<Props> {
 
   _keyPressPropName() {
     if (typeof navigator !== 'undefined') {
-      return navigator.userAgent.match(/Android/i) ? 'onBeforeInput' : 'onKeyPress';
+      return navigator.userAgent.match(/Android/i)
+        ? 'onBeforeInput'
+        : 'onKeyPress';
     }
     return 'onKeyPress';
   }
@@ -205,7 +211,7 @@ export default class FormInputComponent extends Component<Props> {
       onChange: this._onChange,
       onKeyDown: this._onKeyDown,
       onPaste: this._onPaste,
-      [this._keyPressPropName()]: this._onKeyPress,
+      [this._keyPressPropName()]: this._onKeyPress
     };
   }
 
@@ -228,16 +234,32 @@ export default class FormInputComponent extends Component<Props> {
     return props;
   };
 
+  _lastValue = null as any;
+  setValue = (value: string) => {
+    if (!this._Input) return;
+    if (value === this._lastValue) return;
+
+    this._lastValue = value;
+    this._Input.setState({ value });
+    this._Input.input.value = value;
+  };
+
+  _Input: Input | null = null;
+  handleInputRef = (ref: Input) => {
+    if (!ref) return;
+    this._Input = ref;
+    this.input = ref.input;
+
+    if (
+      this._lastValue === null &&
+      typeof this.props.defaultValue === 'string'
+    ) {
+      this.mask.setValue(this.props.defaultValue); // write the whole updated value into the mask
+      this.setValue(this._getDisplayValue()); // update the form with pattern applied to the value
+    }
+  };
+
   render() {
-    return (
-      <Input
-        {...this.getInputProps()}
-        ref={r => {
-          if (r) {
-            this.input = r.input;
-          }
-        }}
-      />
-    );
+    return <Input {...this.getInputProps()} ref={this.handleInputRef} />;
   }
 }

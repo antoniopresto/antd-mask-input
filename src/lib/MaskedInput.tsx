@@ -43,7 +43,7 @@ export default class FormInputComponent extends Component<Props> {
     if (!this.props.mask) return null;
     if (
       this.props.mask !== nextProps.mask &&
-      this.props.value !== nextProps.mask
+      this.props.value !== nextProps.value
     ) {
       // if we get a new value and a new mask at the same time
       // check if the mask.value is still the initial value

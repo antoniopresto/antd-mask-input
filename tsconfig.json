@@ -40,7 +40,7 @@
     "types": [],
     "typeRoots": ["node_modules/@types", "src/types", "node_modules/antd/lib/*"]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules/**"],
   "compileOnSave": false
 }

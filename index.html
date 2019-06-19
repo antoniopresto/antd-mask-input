@@ -64,8 +64,75 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<h1 id="antd-masked-input">antd-masked-input</h1>
-				<p>Ant Design Mask Input</p>
+				<h1 id="antd-mask-input">antd-mask-input</h1>
+				<p>A <a href="https://ant.design/components/input/">Ant Design Input</a> component for <code>&lt;input&gt;</code> masking, built on top of <a href="https://github.com/insin/inputmask-core">inputmask-core</a>.</p>
+				<h2 id="install">Install</h2>
+				<h3 id="npm">npm</h3>
+				<pre><code>npm <span class="hljs-keyword">install</span> antd-<span class="hljs-keyword">mask</span>-<span class="hljs-keyword">input</span> <span class="hljs-comment">--save</span></code></pre><h2 id="usage">Usage</h2>
+				<p>Give <code>MaskedInput</code> a <a href="#mask-string"><code>mask</code></a>:</p>
+				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> MaskedInput <span class="hljs-keyword">from</span> <span class="hljs-string">'antd-mask-input'</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CreditCardDetails</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">React</span>.<span class="hljs-title">Component</span> </span>{
+  state = {
+    <span class="hljs-attr">card</span>: <span class="hljs-string">''</span>,
+    <span class="hljs-attr">expiry</span>: <span class="hljs-string">''</span>,
+    <span class="hljs-attr">ccv</span>: <span class="hljs-string">''</span>
+  }
+
+  _onChange = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+    <span class="hljs-keyword">this</span>.setState({[e.target.name]: e.target.value})
+  }
+
+  render() {
+    <span class="hljs-keyword">return</span> &lt;div className="CreditCardDetails"&gt;
+      &lt;label&gt;
+        Card Number:{' '}
+        &lt;MaskedInput mask="1111 1111 1111 1111" name="card" size="20" onChange={this._onChange}/&gt;
+      &lt;/label&gt;
+      &lt;label&gt;
+        Expiry Date:{' '}
+        &lt;MaskedInput mask="11/1111" name="expiry" placeholder="mm/yyyy" onChange={this._onChange}/&gt;
+      &lt;/label&gt;
+      &lt;label&gt;
+        CCV:{' '}
+        &lt;MaskedInput mask="111" name="ccv" onChange={this._onChange}/&gt;
+      &lt;/label&gt;
+    &lt;/div&gt;
+  }
+}</code></pre>
+				<p>Create some wrapper components if you have a masking configuration which will be reused:</p>
+				<pre><code class="language-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">CustomInput</span>(<span class="hljs-params">props</span>) </span>{
+  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">MaskedInput</span>
+    <span class="hljs-attr">mask</span>=<span class="hljs-string">"1111-WW-11"</span>
+    <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"1234-WW-12"</span>
+    <span class="hljs-attr">size</span>=<span class="hljs-string">"11"</span>
+    {<span class="hljs-attr">...props</span>}
+    <span class="hljs-attr">formatCharacters</span>=<span class="hljs-string">{{</span>
+      '<span class="hljs-attr">W</span>'<span class="hljs-attr">:</span> {
+        <span class="hljs-attr">validate</span>(<span class="hljs-attr">char</span>) { <span class="hljs-attr">return</span> /\<span class="hljs-attr">w</span>/<span class="hljs-attr">.test</span>(<span class="hljs-attr">char</span> ) },
+        <span class="hljs-attr">transform</span>(<span class="hljs-attr">char</span>) { <span class="hljs-attr">return</span> <span class="hljs-attr">char.toUpperCase</span>() }
+      }
+    }}
+  /&gt;</span>
+}</span></code></pre>
+				<h2 id="props">Props</h2>
+				<h3 id="mask-string"><code>mask</code> : <code>string</code></h3>
+				<p>The masking pattern to be applied to the <code>&lt;input&gt;</code>.</p>
+				<p>See the <a href="https://github.com/insin/inputmask-core#pattern">inputmask-core docs</a> for supported formatting characters.</p>
+				<h3 id="onchange-event-syntheticevent-any"><code>onChange</code> : <code>(event: SyntheticEvent) =&gt; any</code></h3>
+				<p>A callback which will be called any time the mask&#39;s value changes.</p>
+				<p>This will be passed a <code>SyntheticEvent</code> with the input accessible via <code>event.target</code> as usual.</p>
+				<p><strong>Note:</strong> this component currently calls <code>onChange</code> directly, it does not generate an <code>onChange</code> event which will bubble up like a regular <code>&lt;input&gt;</code> component, so you <em>must</em> pass an <code>onChange</code> if you want to get a value back out.</p>
+				<h3 id="formatcharacters-object"><code>formatCharacters</code>: <code>Object</code></h3>
+				<p>Customised format character definitions for use in the pattern.</p>
+				<p>See the <a href="https://github.com/insin/inputmask-core#formatcharacters">inputmask-core docs</a> for details of the structure of this object.</p>
+				<h3 id="placeholderchar-string"><code>placeholderChar</code>: <code>string</code></h3>
+				<p>Customised placeholder character used to fill in editable parts of the pattern.</p>
+				<p>See the <a href="https://github.com/insin/inputmask-core#placeholderchar--string">inputmask-core docs</a> for details.</p>
+				<h3 id="other-props">Other props</h3>
+				<p>See <a href="https://ant.design/components/input/">Ant Design Input</a></p>
+				<h2 id="mit-licensed">MIT Licensed</h2>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">

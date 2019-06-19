@@ -39,6 +39,10 @@ export default class FormInputComponent extends Component<Props> {
     rules: []
   };
 
+  componentDidMount() {
+    this.setValue(this._getDisplayValue());
+  }
+
   componentWillReceiveProps(nextProps: Props) {
     if (!this.props.mask) return null;
     if (

@@ -207,7 +207,13 @@ export default class MaskedInput extends Component<MaskedInputProps> {
     return 'onKeyPress';
   }
 
-  _getEventHandlers() {
+  _getEventHandlers(): {
+    onChange: (TChangeEvent) => void;
+    onKeyDown: (TChangeEvent) => void;
+    onPaste: (TClipboardEvent) => void;
+    onBeforeInput?: (TChangeEvent) => void;
+    onKeyPress?: (TChangeEvent) => void;
+  } {
     return {
       onChange: this._onChange,
       onKeyDown: this._onKeyDown,

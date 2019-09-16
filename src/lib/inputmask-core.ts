@@ -1,4 +1,8 @@
-import { DEFAULT_PLACEHOLDER_CHAR, FormatCharacters, mergeFormatCharacters } from './helpers';
+import {
+  DEFAULT_PLACEHOLDER_CHAR,
+  FormatCharacters,
+  mergeFormatCharacters
+} from './helpers';
 import { Pattern } from './Pattern';
 
 type SelectionObject = { start: number; end: number };
@@ -29,6 +33,7 @@ export class InputMask {
     lastOp: string | null;
     startUndo?: boolean;
   }[] = [];
+
   _historyIndex: null | number = null;
   _lastOp: null | string = null;
   _lastSelection: null | SelectionObject = null;
@@ -39,9 +44,9 @@ export class InputMask {
         isRevealingMask: false,
         placeholderChar: DEFAULT_PLACEHOLDER_CHAR,
         selection: { start: 0, end: 0 },
-        value: '',
+        value: ''
       },
-      ...options,
+      ...options
     } as Options;
 
     if (!mergedOptions.pattern) {
@@ -53,17 +58,19 @@ export class InputMask {
       mergedOptions.placeholderChar.length > 1
     ) {
       throw new Error(
-        'InputMask: placeholderChar should be a single character or an empty string.',
+        'InputMask: placeholderChar should be a single character or an empty string.'
       );
     }
 
     this.placeholderChar = mergedOptions.placeholderChar;
-    this.formatCharacters = mergeFormatCharacters(mergedOptions.formatCharacters);
+    this.formatCharacters = mergeFormatCharacters(
+      mergedOptions.formatCharacters
+    );
 
     this.setPattern(mergedOptions.pattern, {
       value: mergedOptions.value,
       selection: mergedOptions.selection,
-      isRevealingMask: mergedOptions.isRevealingMask,
+      isRevealingMask: mergedOptions.isRevealingMask
     });
   }
 
@@ -71,14 +78,14 @@ export class InputMask {
     const merged = {
       selection: { start: 0, end: 0 },
       value: '',
-      ...options,
+      ...options
     };
 
     this.pattern = new Pattern(
       patternSource,
       this.formatCharacters,
       this.placeholderChar,
-      merged.isRevealingMask,
+      merged.isRevealingMask
     );
 
     this.setValue(merged.value);
@@ -134,28 +141,32 @@ export class InputMask {
       return false;
     }
 
-    var selectionBefore = { ...this.selection } as SelectionObject;
-    var valueBefore = this.getValue();
+    const selectionBefore = copy(this.selection);
+    const valueBefore = this.getValue();
 
-    var inputIndex = this.selection.start;
+    let inputIndex = this.selection.start;
 
     // If the cursor or selection is prior to the first editable character, make
     // sure any input given is applied to it.
-    if (inputIndex < this.pattern.firstEditableIndex!) {
-      inputIndex = this.pattern.firstEditableIndex!;
+    if (inputIndex < this.pattern.firstEditableIndex) {
+      inputIndex = this.pattern.firstEditableIndex;
     }
 
     // Bail out or add the character to input
     if (this.pattern.isEditableIndex(inputIndex)) {
+      console.log('isEditableIndex');
+
       if (!this.pattern.isValidAtIndex(char, inputIndex)) {
         return false;
       }
       this.value[inputIndex] = this.pattern.transform(char, inputIndex);
+    } else {
+      console.log('not editable');
     }
 
     // If multiple characters were selected, blank the remainder out based on the
     // pattern.
-    var end = this.selection.end - 1;
+    let end = this.selection.end - 1;
     while (end > inputIndex) {
       if (this.pattern.isEditableIndex(end)) {
         this.value[end] = this.placeholderChar;
@@ -178,18 +189,26 @@ export class InputMask {
     // History
     if (this._historyIndex != null) {
       // Took more input after undoing, so blow any subsequent history away
-      this._history.splice(this._historyIndex, this._history.length - this._historyIndex);
+      this._history.splice(
+        this._historyIndex,
+        this._history.length - this._historyIndex
+      );
       this._historyIndex = null;
     }
     if (
       this._lastOp !== 'input' ||
       selectionBefore.start !== selectionBefore.end ||
-      (this._lastSelection !== null && selectionBefore.start !== this._lastSelection.start)
+      (this._lastSelection !== null &&
+        selectionBefore.start !== this._lastSelection.start)
     ) {
-      this._history.push({ value: valueBefore, selection: selectionBefore, lastOp: this._lastOp });
+      this._history.push({
+        value: valueBefore,
+        selection: selectionBefore,
+        lastOp: this._lastOp
+      });
     }
     this._lastOp = 'input';
-    this._lastSelection = { ...this.selection };
+    this._lastSelection = copy(this.selection);
 
     return true;
   }
@@ -236,14 +255,22 @@ export class InputMask {
     // History
     if (this._historyIndex != null) {
       // Took more input after undoing, so blow any subsequent history away
-      this._history.splice(this._historyIndex, this._history.length - this._historyIndex);
+      this._history.splice(
+        this._historyIndex,
+        this._history.length - this._historyIndex
+      );
     }
     if (
       this._lastOp !== 'backspace' ||
       selectionBefore.start !== selectionBefore.end ||
-      (this._lastSelection !== null && selectionBefore.start !== this._lastSelection.start)
+      (this._lastSelection !== null &&
+        selectionBefore.start !== this._lastSelection.start)
     ) {
-      this._history.push({ value: valueBefore, selection: selectionBefore, lastOp: this._lastOp });
+      this._history.push({
+        value: valueBefore,
+        selection: selectionBefore,
+        lastOp: this._lastOp
+      });
     }
     this._lastOp = 'backspace';
     this._lastSelection = { ...this.selection };
@@ -268,14 +295,18 @@ export class InputMask {
       _lastOp: this._lastOp,
       _history: this._history.slice(),
       _historyIndex: this._historyIndex,
-      _lastSelection: { ...this._lastSelection },
+      _lastSelection: { ...this._lastSelection }
     };
 
     // If there are static characters at the start of the pattern and the cursor
     // or selection is within them, the static characters must match for a valid
     // paste.
     if (this.selection.start < this.pattern.firstEditableIndex!) {
-      for (var i = 0, l = this.pattern.firstEditableIndex! - this.selection.start; i < l; i++) {
+      for (
+        var i = 0, l = this.pattern.firstEditableIndex! - this.selection.start;
+        i < l;
+        i++
+      ) {
         if (input.charAt(i) !== this.pattern.pattern[i]) {
           return false;
         }
@@ -283,7 +314,9 @@ export class InputMask {
 
       // Continue as if the selection and input started from the editable part of
       // the pattern.
-      input = input.substring(this.pattern.firstEditableIndex! - this.selection.start);
+      input = input.substring(
+        this.pattern.firstEditableIndex! - this.selection.start
+      );
       this.selection.start = this.pattern.firstEditableIndex!;
     }
 
@@ -343,7 +376,7 @@ export class InputMask {
           value: value,
           selection: { ...this.selection },
           lastOp: this._lastOp,
-          startUndo: true,
+          startUndo: true
         });
       }
     } else {
@@ -380,7 +413,8 @@ export class InputMask {
 
     if (this.selection.start === this.selection.end) {
       if (this.selection.start < this.pattern.firstEditableIndex!) {
-        this.selection!.start = this.selection!.end = this.pattern.firstEditableIndex as number;
+        this.selection!.start = this.selection!.end = this.pattern
+          .firstEditableIndex as number;
         return true;
       }
       // Set selection to the first editable, non-placeholder character before the selection
@@ -401,6 +435,22 @@ export class InputMask {
     }
     return false;
   }
+}
+
+function extend(dest: any, src: any) {
+  if (src) {
+    let props = Object.keys(src);
+
+    for (var i = 0, l = props.length; i < l; i++) {
+      dest[props[i]] = src[props[i]];
+    }
+  }
+
+  return dest;
+}
+
+function copy<T = any>(obj: T): T {
+  return extend({}, obj);
 }
 
 export default InputMask;

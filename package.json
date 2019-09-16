@@ -34,7 +34,7 @@
     "doc:json": "typedoc src/ --exclude **/*.spec.ts --target ES6 --mode file --json build/docs/typedoc.json",
     "doc:publish": "gh-pages -m \"[ci skip] Updates\" -d build/docs",
     "version": "standard-version",
-    "reset": "git clean -dfx && git reset --hard && npm i",
+    "reset": "git clean -dfx && git reset --hard && yarn install",
     "clean": "trash build test",
     "all": "run-s reset test doc:html",
     "prepare-release": "run-s all version doc:publish",
@@ -63,14 +63,17 @@
   "devDependencies": {
     "@babel/core": "^7.6.0",
     "@storybook/addon-actions": "^5.2.0",
+    "@storybook/addon-console": "^1.2.1",
     "@storybook/addon-links": "^5.2.0",
     "@storybook/addons": "^5.2.0",
     "@storybook/react": "^5.2.0",
     "@types/enzyme": "^3.9.3",
     "@types/jsdom": "^12.2.3",
+    "@types/storybook__react": "*",
     "antd": "^3.17.0",
     "ava": "1.0.0-beta.7",
     "babel-loader": "^8.0.6",
+    "babel-preset-react-app": "^9.0.1",
     "codecov": "^3.1.0",
     "cz-conventional-changelog": "^2.1.0",
     "enzyme": "^3.10.0",
@@ -88,7 +91,10 @@
     "standard-version": "^4.4.0",
     "trash-cli": "^1.4.0",
     "typedoc": "^0.14.2",
-    "typescript": "^3.1.6"
+    "typescript": "3.5.3"
+  },
+  "resolutions": {
+    "typescript": "3.5.3"
   },
   "ava": {
     "failFast": true,

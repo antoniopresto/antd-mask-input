@@ -2,11 +2,17 @@ let KEYCODE_Z = 90;
 let KEYCODE_Y = 89;
 
 export function isUndo(e: KeyboardEvent): boolean {
-  return (e.ctrlKey || e.metaKey) && e.keyCode === (e.shiftKey ? KEYCODE_Y : KEYCODE_Z);
+  return (
+    (e.ctrlKey || e.metaKey) &&
+    e.keyCode === (e.shiftKey ? KEYCODE_Y : KEYCODE_Z)
+  );
 }
 
 export function isRedo(e: KeyboardEvent): boolean {
-  return (e.ctrlKey || e.metaKey) && e.keyCode === (e.shiftKey ? KEYCODE_Z : KEYCODE_Y);
+  return (
+    (e.ctrlKey || e.metaKey) &&
+    e.keyCode === (e.shiftKey ? KEYCODE_Z : KEYCODE_Y)
+  );
 }
 
 type GetSelectionResult = { start: number; end: number };
@@ -37,11 +43,30 @@ export function getSelection(el: HTMLInputElement): GetSelectionResult {
   return { start, end };
 }
 
-export function setSelection(el: HTMLInputElement, selection: GetSelectionResult) {
+let selectionTimeout: any;
+export function setSelection(
+  el: HTMLInputElement,
+  selection: GetSelectionResult
+) {
+  clearTimeout(selectionTimeout);
+
   try {
+    if (
+      el.selectionStart === selection.start &&
+      el.selectionEnd === selection.end
+    ) {
+      return;
+    }
+
     if (el.selectionStart !== undefined) {
       el.focus();
       el.setSelectionRange(selection.start, selection.end);
+
+      // fix https://bugs.chromium.org/p/chromium/issues/detail?id=32865
+      selectionTimeout = setTimeout(() => {
+        setSelection(el, selection);
+      }, 0);
+      
     } else {
       el.focus();
       // @ts-ignore (IE only)
@@ -89,17 +114,17 @@ export const DEFAULT_FORMAT_CHARACTERS: FormatCharacters = {
   '*': {
     validate: function(char: string) {
       return ALPHANNUMERIC_RE.test(char);
-    },
+    }
   },
   '1': {
     validate: function(char: string) {
       return DIGIT_RE.test(char);
-    },
+    }
   },
   a: {
     validate: function(char: string) {
       return LETTER_RE.test(char);
-    },
+    }
   },
   A: {
     validate: function(char: string) {
@@ -107,7 +132,7 @@ export const DEFAULT_FORMAT_CHARACTERS: FormatCharacters = {
     },
     transform: function(char: string) {
       return char.toUpperCase();
-    },
+    }
   },
   '#': {
     validate: function(char: string) {
@@ -115,8 +140,8 @@ export const DEFAULT_FORMAT_CHARACTERS: FormatCharacters = {
     },
     transform: function(char: string) {
       return char.toUpperCase();
-    },
-  },
+    }
+  }
 };
 
 export type FormatCharacters = {

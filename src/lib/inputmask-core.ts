@@ -154,8 +154,6 @@ export class InputMask {
 
     // Bail out or add the character to input
     if (this.pattern.isEditableIndex(inputIndex)) {
-      console.log('isEditableIndex');
-
       if (!this.pattern.isValidAtIndex(char, inputIndex)) {
         return false;
       }

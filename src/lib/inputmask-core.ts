@@ -99,7 +99,7 @@ export class InputMask {
     if (value == null) {
       value = '';
     }
-    this.value = this.pattern.formatValue(value.split(''));
+    this.value = this.pattern.formatValue((value || '').split(''));
   }
 
   _resetHistory() {
@@ -111,9 +111,11 @@ export class InputMask {
 
   getValue(): string {
     if (this.pattern.isRevealingMask) {
-      this.value = this.pattern.formatValue(this.getRawValue().split(''));
+      this.value = this.pattern.formatValue(
+        (this.getRawValue() || '').split('')
+      );
     }
-    return this.value.join('');
+    return (this.value || []).join('');
   }
 
   getRawValue(): string {

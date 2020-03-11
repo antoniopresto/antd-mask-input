@@ -237,7 +237,7 @@ export default class MaskedInput extends Component<MaskedInputProps> {
     let eventHandlers = this._getEventHandlers();
     let { placeholder = this.mask.emptyValue } = this.props;
 
-    let { placeholderChar, formatCharacters, ...cleanedProps } = this.props;
+    let { showMask, placeholderChar, formatCharacters, ...cleanedProps } = this.props;
     const props = { ...cleanedProps, ...eventHandlers, maxLength, placeholder };
     delete props.value;
     return props;

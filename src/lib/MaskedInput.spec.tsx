@@ -28,7 +28,7 @@ test('should require mask', t => {
 });
 
 test('should handle a masking workflow', t => {
-  const input = mountComponent({ mask: '11/11', value: '123' }).getDOMNode<
+  const input = mountComponent({ mask: '11/11', showMask: true, value: '123' }).getDOMNode<
     HTMLInputElement
   >();
   t.is(input.className, 'ant-input');
@@ -40,14 +40,14 @@ test('should handle updating mask', t => {
   let defaultMask = '1111 1111 1111 1111';
   let amexMask = '1111 111111 11111';
 
-  let component = mountComponent({ mask: defaultMask });
+  let component = mountComponent({ mask: defaultMask, showMask: true });
   let input = component.getDOMNode<HTMLInputElement>();
 
   t.deepEqual(input.value, '');
   t.is(input.placeholder, '____ ____ ____ ____');
   t.deepEqual(input.selectionStart, 0);
 
-  component.setProps({ mask: amexMask });
+  component.setProps({ mask: amexMask, showMask: true });
   component.update();
 
   t.is(input.placeholder, '____ ______ _____');
@@ -66,7 +66,7 @@ test('should handle updating value', t => {
     );
   }
 
-  render({ mask: defaultMask, value: '' });
+  render({ mask: defaultMask, showMask: true, value: '' });
   let input: HTMLInputElement = ReactDOM.findDOMNode(ref);
 
   // initial state
@@ -76,7 +76,7 @@ test('should handle updating value', t => {
   t.deepEqual(input.selectionStart, 0);
 
   // update value
-  render({ mask: defaultMask, value: '4111111111111111' });
+  render({ mask: defaultMask, showMask: true, value: '4111111111111111' });
   input = ReactDOM.findDOMNode(ref);
 
   // initial state
@@ -94,7 +94,7 @@ test('should handle updating mask and value', t => {
     );
   }
 
-  render({ mask: defaultMask, value: '' });
+  render({ mask: defaultMask, showMask: true, value: '' });
   let input: HTMLInputElement = ReactDOM.findDOMNode(ref);
 
   // initial state
@@ -104,12 +104,12 @@ test('should handle updating mask and value', t => {
   t.deepEqual(input.selectionStart, 0);
 
   // update value
-  render({ mask: defaultMask, value: '4111111111111111' });
+  render({ mask: defaultMask, showMask: true, value: '4111111111111111' });
   input = ReactDOM.findDOMNode(ref);
 
   t.deepEqual(input.value, '4111 1111 1111 1111');
 
-  render({ mask: '11/11/1111', value: '25091989' });
+  render({ mask: '11/11/1111', showMask: true, value: '25091989' });
   input = ReactDOM.findDOMNode(ref);
 
   t.deepEqual(ref._Input.state.value, '25/09/1989');
@@ -121,11 +121,12 @@ test('should remove leftover placeholder characters when switching to smaller ma
   let defaultMask = '1111 1111 1111 1111';
   let amexMask = '1111 111111 11111';
   let mask = defaultMask;
+  let showMask = true;
   let value = null;
 
   function render() {
     ReactDOM.render(
-      React.createElement(MaskedInput, { mask, value, ref: r => (ref = r) }),
+      React.createElement(MaskedInput, { mask, showMask, value, ref: r => (ref = r) }),
       document.body
     );
   }
@@ -162,6 +163,7 @@ test('cleans props from input', t => {
 
   render({
     mask: defaultMask,
+    showMask: true,
     value: '',
     placeholderChar: 'X',
     formatCharacters: { A: null }
@@ -185,7 +187,7 @@ test('should handle updating multiple values', t => {
     );
   }
 
-  render({ mask: defaultMask, value: '' });
+  render({ mask: defaultMask, showMask: true, value: '' });
   let input = ReactDOM.findDOMNode(ref);
 
   // initial state
@@ -194,7 +196,7 @@ test('should handle updating multiple values', t => {
   t.deepEqual(input.maxLength, 19);
 
   // update mask and value
-  render({ mask: defaultMask, value: visa });
+  render({ mask: defaultMask, showMask: true, value: visa });
   input = ReactDOM.findDOMNode(ref);
 
   // initial state
@@ -202,7 +204,7 @@ test('should handle updating multiple values', t => {
   t.deepEqual(input.maxLength, 19);
 
   // update mask and value
-  render({ mask: defaultMask, value: mastercard });
+  render({ mask: defaultMask, showMask: true, value: mastercard });
   input = ReactDOM.findDOMNode(ref);
 
   // initial state

@@ -6,6 +6,7 @@ import { InputProps } from 'antd/lib/input';
 
 export type MaskedInputProps = InputProps & {
   mask: string;
+  showMask?: boolean;
   formatCharacters?: object;
   placeholderChar?: string;
   value?: string;
@@ -25,7 +26,8 @@ export default class MaskedInput extends Component<MaskedInputProps> {
     let options: any = {
       pattern: this.props.mask,
       value: this.props.value,
-      formatCharacters: this.props.formatCharacters
+      formatCharacters: this.props.formatCharacters,
+      isRevealingMask: this.props.showMask
     };
 
     if (this.props.placeholderChar) {
@@ -39,7 +41,7 @@ export default class MaskedInput extends Component<MaskedInputProps> {
     this.setInputValue(this._getDisplayValue());
   }
 
-  componentWillReceiveProps(nextProps: MaskedInputProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: MaskedInputProps) {
     if (
       this.props.mask !== nextProps.mask &&
       this.props.value !== nextProps.mask
@@ -58,14 +60,14 @@ export default class MaskedInput extends Component<MaskedInputProps> {
     } else if (this.props.mask !== nextProps.mask) {
       this.mask.setPattern(nextProps.mask, { value: this.mask.getRawValue() });
     }
-    
+
     if (this.props.value !== nextProps.value) {
       this.mask.setValue(nextProps.value);
       this.setInputValue(this._getDisplayValue());
     }
   }
 
-  componentWillUpdate(nextProps: MaskedInputProps) {
+  UNSAFE_componentWillUpdate(nextProps: MaskedInputProps) {
     if (!this.props.mask) return null;
     if (nextProps.mask !== this.props.mask) {
       this._updatePattern(nextProps);
@@ -97,7 +99,7 @@ export default class MaskedInput extends Component<MaskedInputProps> {
   }
 
   _onChange = (e: TChangeEvent) => {
-    // console.log('onChange', JSON.stringify(getSelection(this.input)), e.target.value)
+    // console.log('MaskedInput onChange:', JSON.stringify(getSelection(this.input)), e.target.value)
 
     let maskValue = this.mask.getValue();
     let incomingValue = e.target.value;
@@ -158,7 +160,7 @@ export default class MaskedInput extends Component<MaskedInputProps> {
   };
 
   _onKeyPress = (e: TKeyboardEvent) => {
-    // console.log('onKeyPress', JSON.stringify(getSelection(this.input)), e.key, e.target.value)
+    // console.log('MaskedInput onKeyPress', JSON.stringify(getSelection(this.input)), e.key, e.target.value)
 
     // Ignore modified key presses
     // Ignore enter key to allow form submission
@@ -181,7 +183,7 @@ export default class MaskedInput extends Component<MaskedInputProps> {
     e.preventDefault();
     this._updateMaskSelection();
     // getData value needed for IE also works in FF & Chrome
-    if (this.mask.paste(e.clipboardData.getData('Text'))) {
+    if (this.mask.paste(e.clipboardData.getData('Text').replace(/[^0-9a-z]/gi, ''))) {
       // @ts-ignore
       this.setInputValue(this.mask.getValue());
       // Timeout needed for IE

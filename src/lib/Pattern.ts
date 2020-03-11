@@ -82,25 +82,26 @@ export class Pattern {
   }
 
   formatValue(value: string[]): string[] {
-    var valueBuffer = new Array(this.length);
+    var valueBuffer = [];
     var valueIndex = 0;
 
     for (var i = 0, l = this.length; i < l; i++) {
       if (this.isEditableIndex(i)) {
         if (
-          this.isRevealingMask &&
+          !this.isRevealingMask &&
           value.length <= valueIndex &&
           !this.isValidAtIndex(value[valueIndex], i)
         ) {
           break;
         }
-        valueBuffer[i] =
+        valueBuffer.push(
           value.length > valueIndex && this.isValidAtIndex(value[valueIndex], i)
             ? this.transform(value[valueIndex], i)
-            : this.placeholderChar;
+            : this.placeholderChar
+        );
         valueIndex++;
       } else {
-        valueBuffer[i] = this.pattern[i];
+        valueBuffer.push(this.pattern[i]);
         // Also allow the value to contain static values from the pattern by
         // advancing its index.
         if (value.length > valueIndex && value[valueIndex] === this.pattern[i]) {
@@ -108,8 +109,16 @@ export class Pattern {
         }
       }
     }
-
     return valueBuffer;
+  }
+
+  findEditableIndexBefore(index: number): number {
+    for (let i = index-1; i >= 0; i--) {
+      if (this.isEditableIndex(i)) {
+        return i;
+      }
+    }
+    return 0;
   }
 
   isEditableIndex(index: number) {

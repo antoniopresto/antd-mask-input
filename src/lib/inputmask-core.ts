@@ -90,7 +90,7 @@ export class InputMask {
 
     this.setValue(merged.value);
 
-    this.emptyValue = this.pattern.formatValue([]).join('');
+    this.emptyValue = this.pattern.formatValue(['']).join('');
     this.selection = merged.selection;
     this._resetHistory();
   }
@@ -177,6 +177,8 @@ export class InputMask {
     // Advance the cursor to the next character
     this.selection.start = this.selection.end = inputIndex + 1;
 
+    this.value = this.pattern.formatValue(this.value);
+
     // Skip over any subsequent static characters
     while (
       this.pattern.length > this.selection.start &&
@@ -185,6 +187,8 @@ export class InputMask {
       this.selection.start++;
       this.selection.end++;
     }
+
+    console.log("MaskedInput input:", this.value, this.selection);
 
     // History
     if (this._historyIndex != null) {
@@ -229,28 +233,17 @@ export class InputMask {
     var valueBefore = this.getValue();
 
     // No range selected - work on the character preceding the cursor
-    if (this.selection.start === this.selection.end) {
-      if (this.pattern.isEditableIndex(this.selection.start - 1)) {
-        if (this.pattern.isRevealingMask) {
-          this.value.splice(this.selection.start - 1);
-        } else {
-          this.value[this.selection.start - 1] = this.placeholderChar;
-        }
-      }
-      this.selection.start--;
-      this.selection.end--;
+    if (this.selection.start === this.selection.end || !this.pattern.isEditableIndex(this.selection.start)) {
+      this.selection.start = this.pattern.findEditableIndexBefore(this.selection.start);
     }
-    // Range selected - delete characters and leave the cursor at the start of the selection
-    else {
-      var end = this.selection.end - 1;
-      while (end >= this.selection.start) {
-        if (this.pattern.isEditableIndex(end)) {
-          this.value[end] = this.placeholderChar;
-        }
-        end--;
+    if (this.pattern.isRevealingMask) {
+      for (let i = this.selection.end-1; i >= this.selection.start; i--) {
+        this.value[i] = this.placeholderChar;
       }
-      this.selection.end = this.selection.start;
+    } else {
+      this.value.splice(this.selection.start);
     }
+    this.selection.end = this.selection.start;
 
     // History
     if (this._historyIndex != null) {

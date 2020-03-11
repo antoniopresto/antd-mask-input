@@ -188,8 +188,6 @@ export class InputMask {
       this.selection.end++;
     }
 
-    console.log("MaskedInput input:", this.value, this.selection);
-
     // History
     if (this._historyIndex != null) {
       // Took more input after undoing, so blow any subsequent history away

@@ -90,7 +90,7 @@ export class InputMask {
 
     this.setValue(merged.value);
 
-    this.emptyValue = this.pattern.formatValue(['']).join('');
+    this.emptyValue = this.pattern.formatValue([]).join('');
     this.selection = merged.selection;
     this._resetHistory();
   }

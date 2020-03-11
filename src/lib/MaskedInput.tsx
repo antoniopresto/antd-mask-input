@@ -99,7 +99,7 @@ export default class MaskedInput extends Component<MaskedInputProps> {
   }
 
   _onChange = (e: TChangeEvent) => {
-    // console.log('MaskedInput onChange:', JSON.stringify(getSelection(this.input)), e.target.value)
+    // console.log('onChange', JSON.stringify(getSelection(this.input)), e.target.value)
 
     let maskValue = this.mask.getValue();
     let incomingValue = e.target.value;
@@ -160,7 +160,7 @@ export default class MaskedInput extends Component<MaskedInputProps> {
   };
 
   _onKeyPress = (e: TKeyboardEvent) => {
-    // console.log('MaskedInput onKeyPress', JSON.stringify(getSelection(this.input)), e.key, e.target.value)
+    // console.log('onKeyPress', JSON.stringify(getSelection(this.input)), e.key, e.target.value)
 
     // Ignore modified key presses
     // Ignore enter key to allow form submission

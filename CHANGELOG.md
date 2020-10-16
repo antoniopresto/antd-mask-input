@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.1.14"></a>
+## [0.1.14](https://github.com/antoniopresto/antd-mask-input/compare/v0.1.13...v0.1.14) (2020-10-16)
+
+
+### Bug Fixes
+
+* TypeError: Cannot set property 'value' of null with react-test-renderer ([#19](https://github.com/antoniopresto/antd-mask-input/issues/19)) ([cf913de](https://github.com/antoniopresto/antd-mask-input/commit/cf913de))
+
+
+
 <a name="0.1.13"></a>
 ## [0.1.13](https://github.com/antoniopresto/antd-mask-input/compare/v0.1.12...v0.1.13) (2020-01-31)
 

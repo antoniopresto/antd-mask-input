@@ -58,7 +58,7 @@ export default class MaskedInput extends Component<MaskedInputProps> {
     } else if (this.props.mask !== nextProps.mask) {
       this.mask.setPattern(nextProps.mask, { value: this.mask.getRawValue() });
     }
-    
+
     if (this.props.value !== nextProps.value) {
       this.mask.setValue(nextProps.value);
       this.setInputValue(this._getDisplayValue());
@@ -243,7 +243,7 @@ export default class MaskedInput extends Component<MaskedInputProps> {
 
   _lastValue = null as any;
   setInputValue = (value: string) => {
-    if (!this._Input) return;
+    if (!this._Input || !this._Input.input) return;
     if (value === this._lastValue) return;
 
     this._lastValue = value;

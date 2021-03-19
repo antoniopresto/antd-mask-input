@@ -112,7 +112,7 @@ test('should handle updating mask and value', t => {
   render({ mask: '11/11/1111', value: '25091989' });
   input = ReactDOM.findDOMNode(ref);
 
-  t.deepEqual(ref._Input.state.value, '25/09/1989');
+  t.deepEqual(ref.state._Input.state.value, '25/09/1989');
   t.deepEqual(input.value, '25/09/1989');
 });
 

@@ -1,18 +1,11 @@
-# antd-mask-input
+import * as React from 'react';
+import { storiesOf } from '@storybook/react';
+import { MaskedInput, IMask } from '../src';
+import { Form } from 'antd';
+import { MaskType } from '../src/lib/MaskedInput';
 
-A [Ant Design Input](https://ant.design/components/input/) component for `<input>` masking, built on top of [imask](https://github.com/uNmAnNeR/imaskjs/blob/master/packages/react-imask).
+const stories = storiesOf('Components', module);
 
-## Install
-
-### npm
-
-```
-npm install antd-mask-input --save
-```
-
-## Usage
-
-```ts
 const cellphoneMask = '(00) 0 0000-0000';
 const phoneMask = '(00) 0000-0000';
 
@@ -112,28 +105,9 @@ stories.add('Form', () => (
     <button>Go</button>
   </Form>
 ));
-```
 
-## Props
-
-### `mask`
-
-```ts
-type MaskType = string | RegExp | Date | Number; // See the https://imask.js.org/guide.html
-```
-
-### `onChange`
-
-```ts
-onChange: (
-  event: SyntheticEvent & { maskedValue: string; unmaskedValue: string }
-) => any;
-```
-
-### `maskOptions`: `InputMaskOptions`
-
-### Other props
-
-See [Ant Design Input](https://ant.design/components/input/)
-
-## MIT Licensed
+declare global {
+  interface Window {
+    formRef: any;
+  }
+}

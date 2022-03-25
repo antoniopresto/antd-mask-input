@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.16](https://github.com/antoniopresto/antd-mask-input/compare/v0.1.14...v0.1.16) (2022-03-25)
+
+
+### Features
+
+* v2 ([236f435](https://github.com/antoniopresto/antd-mask-input/commit/236f43526940f252915e543ac8fd32698b3f3673))
+
 ### [0.1.16](https://github.com/antoniopresto/antd-mask-input/compare/v0.1.14...v0.1.16) (2021-03-29)
 
 <a name="0.1.14"></a>

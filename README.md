@@ -2,7 +2,7 @@
 
 An [Ant Design Input](https://ant.design/components/input/) component for `<input>` masking, built on top of [imask](https://imask.js.org/guide.html).
 
-> The version 2.0.0 Requires antd >= 4.19.0 - for older versions use the `0.1.15` version
+> The version 2.0.0 Requires antd >= 4.19.0 - for previous versions use the version `0.1.15`
 
 ## Install
 
@@ -15,9 +15,6 @@ npm install antd-mask-input --save
 ## Usage
 
 ```ts
-const cellphoneMask = '(00) 0 0000-0000';
-const phoneMask = '(00) 0000-0000';
-
 stories.add('Phone', () => (
   <>
     <MaskedInput
@@ -36,6 +33,9 @@ stories.add('AMEX', () => (
 ));
 
 const DynamicPhone = (props: any) => {
+  const cellphoneMask = '(00) 0 0000-0000';
+  const phoneMask = '(00) 0000-0000';
+
   // always memoize dynamic masks
   const mask = React.useMemo(
     () => [

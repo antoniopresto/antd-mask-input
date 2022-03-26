@@ -49,11 +49,11 @@ describe('MaskedInput', () => {
   });
 
   test('should handle updating value', () => {
-    let ref: any = null;
+
     let defaultMask = '0000 0000 0000 0000';
 
     const { container, rerender } = render(
-      <MaskedInput mask={defaultMask} value="" ref={(_r) => (ref = _r)} />
+      <MaskedInput mask={defaultMask} value="" />
     );
 
     let input = container.querySelector('input')!;
@@ -65,7 +65,6 @@ describe('MaskedInput', () => {
       <MaskedInput
         mask={defaultMask}
         value="4000000000000111"
-        ref={(_r) => (ref = _r)}
       />
     );
 

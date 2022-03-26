@@ -1,6 +1,6 @@
 {
   "name": "antd-mask-input",
-  "version": "2.0.3",
+  "version": "2.0.5",
   "description": "Ant Design Mask Input",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
@@ -25,8 +25,8 @@
   "scripts": {
     "describe": "npm-scripts-info",
     "build": "run-s clean && run-p build:*",
-    "build:main": "tsc -p tsconfig.json",
-    "build:module": "tsc -p tsconfig.module.json",
+    "build:main": "tsc -p tsconfig.prod.json --module commonjs --outDir build/main",
+    "build:module": "tsc -p tsconfig.prod.json",
     "fix": "run-s fix:*",
     "test": "jest",
     "test:unit": "nyc --silent jest",
@@ -58,9 +58,6 @@
     "version": "Bump package.json version, update CHANGELOG.md, tag release",
     "reset": "Delete all untracked files and reset the repo to the last commit",
     "prepare-release": "One-step: clean, build, test, publish docs, and prep a release"
-  },
-  "engines": {
-    "node": ">=14"
   },
   "peerDependencies": {
     "antd": ">=4.19.0",
@@ -114,7 +111,10 @@
     ]
   },
   "dependencies": {
-    "imask": "6.4.2",
-    "react-imask": "6.4.2"
-  }
+    "imask": "6.4.2"
+  },
+  "files": [
+    "build",
+    "README.md"
+  ]
 }

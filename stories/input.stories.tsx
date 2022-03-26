@@ -1,22 +1,10 @@
-# antd-mask-input
+import * as React from 'react';
+import { storiesOf } from '@storybook/react';
+import { MaskedInput, IMask } from '../src';
+import { Form } from 'antd';
+import { MaskType } from '../src/lib/MaskedInput';
 
-An [Ant Design Input](https://ant.design/components/input/) component for `<input>` masking, built on top of [imask](https://imask.js.org/guide.html).
-
-> The version 2.0.0 Requires antd >= 4.19.0 - for older versions use the `0.1.15` version
-
-## Install
-
-### npm
-
-```
-npm install antd-mask-input --save
-```
-
-## Usage
-
-```ts
-const cellphoneMask = '(00) 0 0000-0000';
-const phoneMask = '(00) 0000-0000';
+const stories = storiesOf('Components', module);
 
 stories.add('Phone', () => (
   <>
@@ -36,6 +24,9 @@ stories.add('AMEX', () => (
 ));
 
 const DynamicPhone = (props: any) => {
+  const cellphoneMask = '(00) 0 0000-0000';
+  const phoneMask = '(00) 0000-0000';
+
   // always memoize dynamic masks
   const mask = React.useMemo(
     () => [
@@ -119,36 +110,9 @@ stories.add('Form', () => (
     <button>Go</button>
   </Form>
 ));
-```
 
-## Props
-
-### `mask`
-
-```ts
-type MaskType = string | RegExp | Date | Number; // See the https://imask.js.org/guide.html
-```
-
-### `onChange`
-
-```ts
-onChange: (
-  event: SyntheticEvent & { maskedValue: string; unmaskedValue: string }
-) => any;
-```
-
-### `maskOptions`:
-
-see the type `InputMaskOptions`
-
-### Other antd props
-
-See [Ant Design Input](https://ant.design/components/input/)
-
-### Other mask options
-
-See [Imask options](https://imask.js.org/guide.html).
-
-Note that this package is not intended to be fully compatible with imask, but the options are almost the same.
-
-## MIT Licensed
+declare global {
+  interface Window {
+    formRef: any;
+  }
+}

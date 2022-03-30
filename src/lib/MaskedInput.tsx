@@ -16,6 +16,8 @@ export interface MaskedInputProps
 
 export { IMask };
 
+const KEY_PRESS_EVENT = keyPressPropName();
+
 export const MaskedInput = React.forwardRef<InputRef, MaskedInputProps>(
   function MaskedInput(props: MaskedInputProps, antdRef) {
     const {
@@ -42,7 +44,7 @@ export const MaskedInput = React.forwardRef<InputRef, MaskedInputProps>(
         lazy: false, // make placeholder always visible
         ..._maskOptions,
       } as IMaskOptions;
-    }, [mask]);
+    }, [_maskOptions, definitions, mask]);
 
     const placeholder = useMemo(() => {
       return IMask.createPipe({ ...maskOptions, lazy: false } as any)('');
@@ -57,46 +59,52 @@ export const MaskedInput = React.forwardRef<InputRef, MaskedInputProps>(
 
     const [value, setValue] = React.useState(propValue);
 
-    const _onEvent = React.useCallback((ev: any, callOnChangeProps = false) => {
-      const masked = imask.current;
-      if (!masked) return;
+    const _onEvent = React.useCallback(
+      (ev: any, callOnChangeProps = false) => {
+        const masked = imask.current;
+        if (!masked) return;
 
-      if (ev.target) {
-        if (ev.target.value !== masked.value) {
-          masked.value = ev.target.value;
-          ev.target.value = masked.value;
-          lastValue.current = masked.value;
+        if (ev.target) {
+          if (ev.target.value !== masked.value) {
+            masked.value = ev.target.value;
+            ev.target.value = masked.value;
+            lastValue.current = masked.value;
+          }
         }
-      }
 
-      Object.assign(ev, {
-        maskedValue: masked.value,
-        unmaskedValue: masked.unmaskedValue,
-      });
+        Object.assign(ev, {
+          maskedValue: masked.value,
+          unmaskedValue: masked.unmaskedValue,
+        });
 
-      masked.updateValue();
-      setValue(lastValue.current);
+        masked.updateValue();
+        setValue(lastValue.current);
 
-      if (callOnChangeProps) {
-        onChange?.(ev);
-      }
-    }, []);
+        if (callOnChangeProps) {
+          onChange?.(ev);
+        }
+      },
+      [onChange]
+    );
 
-    const _onAccept = React.useCallback((ev: any) => {
-      if (!ev?.target) return;
+    const _onAccept = React.useCallback(
+      (ev: any) => {
+        if (!ev?.target) return;
 
-      const input = innerRef.current;
-      const masked = imask.current;
-      if (!input || !masked) return;
+        const input = innerRef.current;
+        const masked = imask.current;
+        if (!input || !masked) return;
 
-      ev.target.value = masked.value;
-      input.value = masked.value;
-      lastValue.current = masked.value;
+        ev.target.value = masked.value;
+        input.value = masked.value;
+        lastValue.current = masked.value;
 
-      _onEvent(ev, true);
-    }, []);
+        _onEvent(ev, true);
+      },
+      [_onEvent]
+    );
 
-    function updateMaskRef() {
+    const updateMaskRef = React.useCallback(() => {
       const input = innerRef.current;
 
       if (imask.current) {
@@ -112,7 +120,7 @@ export const MaskedInput = React.forwardRef<InputRef, MaskedInputProps>(
         imask.current.value = lastValue.current;
         imask.current.alignCursor();
       }
-    }
+    }, [_onAccept, maskOptions]);
 
     function updateValue(value: string) {
       lastValue.current = value;
@@ -133,7 +141,7 @@ export const MaskedInput = React.forwardRef<InputRef, MaskedInputProps>(
         imask.current?.destroy();
         imask.current = null;
       };
-    }, [mask]);
+    }, [mask, updateMaskRef]);
 
     React.useEffect(() => {
       updateValue(propValue);
@@ -168,7 +176,7 @@ export const MaskedInput = React.forwardRef<InputRef, MaskedInputProps>(
           props[KEY_PRESS_EVENT]?.(ev);
         },
       };
-    }, []);
+    }, [_onEvent, props]);
 
     return (
       <Input
@@ -179,7 +187,7 @@ export const MaskedInput = React.forwardRef<InputRef, MaskedInputProps>(
         value={value}
         ref={function handleInputMask(ref) {
           if (antdRef) {
-            if (typeof antdRef == 'function') {
+            if (typeof antdRef === 'function') {
               antdRef(ref);
             } else {
               antdRef.current = ref;
@@ -206,8 +214,6 @@ function keyPressPropName() {
   }
   return 'onKeyPress';
 }
-
-const KEY_PRESS_EVENT = keyPressPropName();
 
 export default MaskedInput;
 

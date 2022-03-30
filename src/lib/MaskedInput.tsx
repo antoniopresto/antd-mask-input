@@ -23,7 +23,6 @@ export const MaskedInput = React.forwardRef<InputRef, MaskedInputProps>(
       maskOptions: _maskOptions,
       value: _value,
       defaultValue,
-      onChange,
       definitions,
       ...antdProps
     } = props;
@@ -57,7 +56,7 @@ export const MaskedInput = React.forwardRef<InputRef, MaskedInputProps>(
 
     const [value, setValue] = React.useState(propValue);
 
-    const _onEvent = React.useCallback((ev: any, callOnChangeProps = false) => {
+    const _onEvent = React.useCallback((ev: any, execOnChangeCallback = false) => {
       const masked = imask.current;
       if (!masked) return;
 
@@ -77,8 +76,8 @@ export const MaskedInput = React.forwardRef<InputRef, MaskedInputProps>(
       masked.updateValue();
       setValue(lastValue.current);
 
-      if (callOnChangeProps) {
-        onChange?.(ev);
+      if (execOnChangeCallback) {
+        props.onChange?.(ev);
       }
     }, []);
 

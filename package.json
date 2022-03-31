@@ -1,6 +1,6 @@
 {
   "name": "antd-mask-input",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "Ant Design Mask Input",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",

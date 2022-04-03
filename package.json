@@ -36,6 +36,7 @@
     "cov:send": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "cov:check": "nyc report && nyc check-coverage --lines 100 --functions 100 --branches 100",
     "version": "standard-version",
+    "clean": "trash build test",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "prepublish": "run-s build test"

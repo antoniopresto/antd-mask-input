@@ -47,7 +47,7 @@ const DynamicPhone = (props: any) => {
       {...props}
       mask={mask}
       maskOptions={{
-        dispatch: function (appended, dynamicMasked) {
+        dispatch: function (_appended, dynamicMasked) {
           const isCellPhone = dynamicMasked.unmaskedValue[2] === '9';
           return dynamicMasked.compiledMasks[isCellPhone ? 0 : 1];
         },
@@ -84,6 +84,30 @@ stories.add('RGB', () => {
   );
 });
 
+window.formRef = {};
+
+stories.add('useForm', () => {
+  const [form] = Form.useForm();
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      form.setFieldsValue({phone: `${Math.random()*1000}`})
+    }, 700);
+
+    return () => clearInterval(interval)
+  }, [])
+
+  return <Form form={form}>
+    <Form.Item
+      label="Phone"
+      name="phone"
+      initialValue={'11'}
+    >
+      <DynamicPhone />
+    </Form.Item>
+  </Form>
+});
+
 //  https://imask.js.org/guide.html#masked-pattern
 const DUMB_IP_MASK = '0[0][0].0[0][0].0[0][0].0[0][0]';
 
@@ -94,7 +118,6 @@ stories.add('IP', () => (
   />
 ));
 
-window.formRef = {};
 
 stories.add('Form', () => (
   <Form ref={(val) => (window.formRef = val)}>

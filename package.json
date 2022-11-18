@@ -64,7 +64,7 @@
     "@testing-library/react": "^12.1.4",
     "@types/jest": "^27.4.1",
     "@types/react": "^17.0.40",
-    "antd": "^4.19.1",
+    "antd": "^5.0.0",
     "codecov": "^3.1.0",
     "cz-conventional-changelog": "^2.1.0",
     "gh-pages": "^2.0.1",
